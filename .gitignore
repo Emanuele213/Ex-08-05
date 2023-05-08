@@ -99,3 +99,4 @@ $RECYCLE.BIN/
 # Project
 
 .tmp
+docker-compose.yml
