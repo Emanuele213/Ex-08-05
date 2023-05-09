@@ -24,7 +24,7 @@ def show_tables():
     print("\nTabella Emp")
     rows = cur.fetchall()
     for row in rows:
-        print(f"empno: {row[0]} - ename : {row[1]} - job: {row[2]} - mgr: {row[3]} - hiredate: {row[4]} - sal: {row[5]} - comm: {row[6]} - deptno: {row[7]} ")
+        print(f"empno: {row[0]} - ename : {row[1]} - job: {row[2]} - mgr: {row[3]} - hiredate: {row[4]} - sal: {row[5]} - comm: {row[6]} - deptno: {row[7]}")
         
     cur.execute("SELECT * FROM salgrade")
     print("\nTabella Salgrade")
