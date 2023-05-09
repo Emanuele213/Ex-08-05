@@ -14,24 +14,23 @@ except psycopg2.Error as error:
     
 def show_tables():
     cur = conn.cursor()
+    print("\nTabella Dept_")
     cur.execute("SELECT * FROM dept")
-    print("TABELLA DEPT:")
     rows = cur.fetchall()
     for row in rows:
-        print(row)
-    print("\n")
+        print(f"deptno: {row[0]} - dname: {row[1]} - loc: {row[2]}")
+        
     cur.execute("SELECT * FROM emp")
-    print("TABELLA EMP:")
+    print("\nTabella Emp")
     rows = cur.fetchall()
     for row in rows:
-        print(row)
-    print("\n")
+        print(f"empno: {row[0]} - ename : {row[1]} - job: {row[2]} - mgr: {row[3]} - hiredate: {row[4]} - sal: {row[5]} - comm: {row[6]} - deptno: {row[7]} ")
+        
     cur.execute("SELECT * FROM salgrade")
-    print("TABELLA SALGRADE:")
+    print("\nTabella Salgrade")
     rows = cur.fetchall()
     for row in rows:
-        print(row)
-    print("\n")
+        print(f"grade: {row[0]} - losal: {row[1]} - hisal: {row[2]}")
 
 def add_dept():
     deptno = input("Inserisci l'id del dipartimento: ")
@@ -165,7 +164,7 @@ def search_emp_by_name():
     else:
         print(f"Trovati {len(result)} impiegati:")
         for row in result:
-            print(f"{row[0]} - {row[1]} - {row[2]} - {row[3]} - {row[4]} - {row[5]} - {row[6]} - {row[7]}")
+            print(f"empno: {row[0]} - ename: {row[1]} - job: {row[2]} - mgr: {row[3]} hiredate: - {row[4]} sal: - {row[5]} comm: - {row[6]} - depno: {row[7]}")
     
 
 def menu():
