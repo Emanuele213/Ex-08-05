@@ -1,20 +1,27 @@
 import psycopg2
 
-try:
-    conn = psycopg2.connect(
-        host="localhost",
-        database="postgres",
-        user="postgres",
-        port= 5432,
-        password="1234")
-    
-except psycopg2.Error as error:
-    print("Errore durante la connessione al database:", error)
-    exit()
-    
+def connect_to_database():
+    try:
+        conn = psycopg2.connect(
+            host="localhost",
+            database="postgres",
+            user="postgres",
+            port=5432,
+            password="1234"
+        )
+        print("Connessione al database avvenuta con successo!")
+        return conn
+    except psycopg2.Error as e:
+        print("Errore durante la connessione al database:", e)
+    finally:
+        if conn is not None:
+            conn.close()
+
+conn = connect_to_database()
+
 def show_tables():
-    cur = conn.cursor()
     print("\nTabella Dept_")
+    cur = conn.cursor()
     cur.execute("SELECT * FROM dept")
     rows = cur.fetchall()
     for row in rows:
@@ -31,8 +38,8 @@ def show_tables():
     rows = cur.fetchall()
     for row in rows:
         print(f"grade: {row[0]} - losal: {row[1]} - hisal: {row[2]}")
+    
     cur.close()
-    conn.close()
 
 def add_dept():
     deptno = input("Inserisci l'id del dipartimento: ")
@@ -42,8 +49,8 @@ def add_dept():
     cur.execute("INSERT INTO dept (deptno, dname, loc) VALUES (%s, %s, %s)", (deptno, dname, loc))
     conn.commit()
     print("Dipartimento aggiunto con successo!\n")
+
     cur.close()
-    conn.close()
 
 def add_emp():
     id = input("Inserisci l'id del dipendente: ")
@@ -58,8 +65,8 @@ def add_emp():
     cur.execute("INSERT INTO emp (id, ename, job, mgr, hiredate, sal, comm, deptno) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)", (id, ename, job, mgr, hiredate, sal, comm, deptno))
     conn.commit()
     print("Dipendente aggiunto con successo!\n")
+    
     cur.close()
-    conn.close()
     
 def add_salgrade():
     grade = input("Inserisci l'id del salario: ")
@@ -69,12 +76,11 @@ def add_salgrade():
     cur.execute("INSERT INTO salgrade (grade, losal, hisal) VALUES (%s, %s, %s)", (grade, losal, hisal))
     conn.commit()
     print("Grado salariale aggiunto con successo.")
+    
     cur.close()
-    conn.close()
 
 def update_dept():
     cur = conn.cursor()
-
     deptno = input("Inserisci l'id del dipartimento da modificare: ")
     new_dname = input("Inserisci il nuovo nome del dipartimento: ")
     new_loc = input("Inserisci la nuova locazione del dipartimento: ")
@@ -84,22 +90,19 @@ def update_dept():
     conn.commit()
 
     print(f"Il dipartimento con id {deptno} è stato modificato con successo")
+    
     cur.close()
-    conn.close()
-
+    
 def delete_dept():
     cur = conn.cursor()
-
     deptno = input("Inserisci l'id del dipartimento da eliminare: ")
-
     sql = f"DELETE FROM dept WHERE deptno = {deptno}"
     cur.execute(sql)
     conn.commit()
 
     print(f"Il dipartimento con id {deptno} è stato eliminato con successo")
+    
     cur.close()
-    conn.close()
-
 
 def update_emp():
     cur = conn.cursor()
@@ -122,9 +125,8 @@ def update_emp():
     conn.commit()
 
     print(f"Il dipendente con id {empno} è stato modificato con successo")
+    
     cur.close()
-    conn.close()
-
 
 def delete_emp():
     cur = conn.cursor()
@@ -136,8 +138,8 @@ def delete_emp():
     conn.commit()
 
     print(f"Il dipendente con id {empno} è stato eliminato con successo")
+    
     cur.close()
-    conn.close()
     
 def update_salgrade():
     cur = conn.cursor()
@@ -152,7 +154,6 @@ def update_salgrade():
     print(f"{cur.rowcount} righe modificate con successo.")
 
     cur.close()
-    conn.close()
     
 def delete_salgrade():
     cur = conn.cursor()
@@ -165,7 +166,6 @@ def delete_salgrade():
     print(f"{cur.rowcount} righe eliminate con successo.")
 
     cur.close()
-    conn.close()
     
 def search_emp_by_name():
     cur = conn.cursor()
@@ -185,14 +185,13 @@ def search_emp_by_name():
         print(f"Trovati {len(result)} impiegati:")
         for row in result:
             print(f"empno: {row[0]} - ename: {row[1]} - job: {row[2]} - mgr: {row[3]} hiredate: - {row[4]} sal: - {row[5]} comm: - {row[6]} - depno: {row[7]}")
-    
+
     cur.close()
-    conn.close()
-    
 
 def menu():
     while True:
-        print("\nScegli una delle seguenti opzioni:")
+        print("\n***************\n")
+        print("Scegli una delle seguenti opzioni:")
         print("1 - Vedi tutti i record")
         print("2 - Aggiungi un dipartimento")
         print("3 - Aggiungi un dipendente")
@@ -207,7 +206,6 @@ def menu():
         print("11 - Esci da programma")
     
         choice = int(input("Inserisci il numero corrispondente all'opzione scelta: "))
-        
         if choice == 1:
             show_tables()
         elif choice == 2:
@@ -232,9 +230,9 @@ def menu():
             search_emp_by_name()
         elif choice == 11:
             print("\nArrivederci!")
+            conn.close()
             break
-        else:
+        else: 
             print("\nScelta non valida. Riprova.")
-
 
 menu()
