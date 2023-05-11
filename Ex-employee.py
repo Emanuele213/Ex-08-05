@@ -31,6 +31,8 @@ def show_tables():
     rows = cur.fetchall()
     for row in rows:
         print(f"grade: {row[0]} - losal: {row[1]} - hisal: {row[2]}")
+    cur.close()
+    conn.close()
 
 def add_dept():
     deptno = input("Inserisci l'id del dipartimento: ")
@@ -40,6 +42,8 @@ def add_dept():
     cur.execute("INSERT INTO dept (deptno, dname, loc) VALUES (%s, %s, %s)", (deptno, dname, loc))
     conn.commit()
     print("Dipartimento aggiunto con successo!\n")
+    cur.close()
+    conn.close()
 
 def add_emp():
     id = input("Inserisci l'id del dipendente: ")
@@ -54,6 +58,8 @@ def add_emp():
     cur.execute("INSERT INTO emp (id, ename, job, mgr, hiredate, sal, comm, deptno) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)", (id, ename, job, mgr, hiredate, sal, comm, deptno))
     conn.commit()
     print("Dipendente aggiunto con successo!\n")
+    cur.close()
+    conn.close()
     
 def add_salgrade():
     grade = input("Inserisci l'id del salario: ")
@@ -63,7 +69,8 @@ def add_salgrade():
     cur.execute("INSERT INTO salgrade (grade, losal, hisal) VALUES (%s, %s, %s)", (grade, losal, hisal))
     conn.commit()
     print("Grado salariale aggiunto con successo.")
-
+    cur.close()
+    conn.close()
 
 def update_dept():
     cur = conn.cursor()
@@ -77,7 +84,8 @@ def update_dept():
     conn.commit()
 
     print(f"Il dipartimento con id {deptno} è stato modificato con successo")
-
+    cur.close()
+    conn.close()
 
 def delete_dept():
     cur = conn.cursor()
@@ -89,6 +97,8 @@ def delete_dept():
     conn.commit()
 
     print(f"Il dipartimento con id {deptno} è stato eliminato con successo")
+    cur.close()
+    conn.close()
 
 
 def update_emp():
@@ -112,6 +122,8 @@ def update_emp():
     conn.commit()
 
     print(f"Il dipendente con id {empno} è stato modificato con successo")
+    cur.close()
+    conn.close()
 
 
 def delete_emp():
@@ -124,6 +136,8 @@ def delete_emp():
     conn.commit()
 
     print(f"Il dipendente con id {empno} è stato eliminato con successo")
+    cur.close()
+    conn.close()
     
 def update_salgrade():
     cur = conn.cursor()
@@ -138,6 +152,7 @@ def update_salgrade():
     print(f"{cur.rowcount} righe modificate con successo.")
 
     cur.close()
+    conn.close()
     
 def delete_salgrade():
     cur = conn.cursor()
@@ -150,13 +165,18 @@ def delete_salgrade():
     print(f"{cur.rowcount} righe eliminate con successo.")
 
     cur.close()
+    conn.close()
     
 def search_emp_by_name():
     cur = conn.cursor()
 
     name = input("\nInserisci il nome dell'impiegato da cercare: ")
 
-    cur.execute("SELECT * FROM emp WHERE ename = %s", (name,))
+    # Aggiunge il carattere jolly '%' all'inizio e alla fine del nome
+    # per cercare anche con parte del nome
+    name = f"%{name}%"
+
+    cur.execute("SELECT * FROM emp WHERE ename LIKE %s", (name,))
     result = cur.fetchall()
 
     if len(result) == 0:
@@ -165,6 +185,9 @@ def search_emp_by_name():
         print(f"Trovati {len(result)} impiegati:")
         for row in result:
             print(f"empno: {row[0]} - ename: {row[1]} - job: {row[2]} - mgr: {row[3]} hiredate: - {row[4]} sal: - {row[5]} comm: - {row[6]} - depno: {row[7]}")
+    
+    cur.close()
+    conn.close()
     
 
 def menu():
